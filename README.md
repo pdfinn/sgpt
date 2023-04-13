@@ -19,7 +19,7 @@ To install and use SGPT, follow these steps:
 ## Usage
 
 ```sh
-go run sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-d]
+sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-d]
 ```
 
 Here is a basic examples of how to use SGPT:
