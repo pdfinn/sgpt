@@ -25,11 +25,11 @@ sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-
 Here is a basic examples of how to use SGPT:
 
 ```sh
-echo 'Hello GPT!' | ./sgpt -i 'you are a 733t h4x0r who makes any input 733t' -k YOUR_API_KEY
+echo 'Hello GPT!' | ./sgpt -i 'you are a 733t h4x0r who makes any input 733t' -k <API_KEY>
 ```
 
 ```sh
-cat sentiment.txt | ./sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k YOUR_API_KEY
+cat sentiment.txt | ./sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k <API_KEY>
 ```
 
 ```sh
