@@ -34,27 +34,37 @@ func main() {
 	instruction := flag.String("i", "", "Instruction for the GPT model")
 	temperature := flag.Float64("t", 0.5, "Temperature for the GPT model")
 	model := flag.String("m", "gpt-4", "GPT model to use")
+	separator := flag.String("s", "\n", "Separator character for input")
 	flag.Parse()
 
 	if *apiKey == "" {
 		log.Fatal("API key is required")
 	}
 
-	// Read input from stdin
+	// Read input from stdin continuously
 	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal(err)
-	}
+	var inputBuffer strings.Builder
 
-	// Call OpenAI API
-	response, err := callOpenAI(*apiKey, *instruction, input, *temperature, *model)
-	if err != nil {
-		log.Fatal(err)
-	}
+	for {
+		inputChar, _, err := reader.ReadRune()
+		if err != nil {
+			break
+		}
 
-	// Print the result
-	fmt.Println(response)
+		if string(inputChar) == *separator {
+			input := inputBuffer.String()
+			inputBuffer.Reset()
+
+			response, err := callOpenAI(*apiKey, *instruction, input, *temperature, *model)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Println(response)
+		} else {
+			inputBuffer.WriteRune(inputChar)
+		}
+	}
 }
 
 func debugOutput(debug bool, format string, a ...interface{}) {
