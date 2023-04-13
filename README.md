@@ -31,6 +31,6 @@ echo 'Hello GPT!' | ./sgpt -i 'you are a 733t h4x0r who makes any input 733t' -k
 -m: The GPT model to use (default: "gpt-4")
 -d: Enable debug output (default: false)
 
-##License
+## License
 
 This project is released under the MIT License. See the LICENSE file for more information.
