@@ -25,11 +25,11 @@ echo 'Hello GPT!' | ./sgpt -i 'you are a 733t h4x0r who makes any input 733t' -k
 ```
 
 ## Command-line flags
--k (required): Your OpenAI API key
--i (required): The instruction for the GPT model
--t: The temperature for the GPT model (default: 0.5)
--m: The GPT model to use (default: "gpt-4")
--d: Enable debug output (default: false)
+- -k (required): Your OpenAI API key
+- -i (required): The instruction for the GPT model
+- -t: The temperature for the GPT model (default: 0.5)
+- -m: The GPT model to use (default: "gpt-4")
+- -d: Enable debug output (default: false)
 
 ## License
 
