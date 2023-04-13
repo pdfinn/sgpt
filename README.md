@@ -12,7 +12,7 @@ StreamGPT (sgpt) is a command-line tool to interact with OpenAI's API. It reads 
 To install and use SGPT, follow these steps:
 
 1. Ensure you have the Go programming language installed on your system. If not, follow the instructions at https://golang.org/doc/install.
-2. Clone this repository to your local machine using `git clone https://github.com/username/sgpt.git`.
+2. Clone this repository to your local machine using `https://github.com/pdfinn/sgpt`.
 3. Change to the `sgpt` directory and build the binary by running `go build`.
 4. Make sure your OpenAI API key is available.
 
