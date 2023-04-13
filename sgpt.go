@@ -116,7 +116,7 @@ func callOpenAI(apiKey, instruction, input string, temperature float64, model st
 		return "", err
 	}
 
-	debugOutput(*debug, "API response: %s\n", string(body)) // Add this line to print the raw API response
+	debugOutput(*debug, "API response: %s\n", string(body))
 
 	var openAIResponse OpenAIResponse
 	err = json.Unmarshal(body, &openAIResponse)
