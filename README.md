@@ -33,7 +33,7 @@ cat sentiment.txt | ./sgpt -i 'You are an expert at analysing the sentiment of E
 ```
 
 ```sh
-echo "What is the capital of France?" | ./sgpt -k <API_KEY> -i "Answer the following question:"
+echo "If the coefficients of a quadratic equation are 1, 3, and -4, what are the roots of the equation?" | sgpt -i "Answer the following question:" -k <API_KEY>
 ```
 
 ## Command-line flags
