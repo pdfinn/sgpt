@@ -41,8 +41,8 @@ echo "What is the capital of France?" | ./sgpt -k <API_KEY> -i "Answer the follo
 - `-i` (required): The instruction for the GPT model
 - `-t`: The temperature for the GPT model (default: 0.5)
 - `-m`: The GPT model to use (default: "`gpt-4`")
+- `-s`: Separator character for input (default: `\n`)
 - `-d`: Enable debug output (default: false)
-- `-s`: Separator character for input (default: `\n`).
 
 ## License
 
