@@ -19,10 +19,11 @@ import (
 
 type OpenAIResponse struct {
 	Choices []struct {
+		Text    string `json:"text,omitempty"`
 		Message struct {
-			Role    string `json:"role"`
-			Content string `json:"content"`
-		} `json:"message"`
+			Role    string `json:"role,omitempty"`
+			Content string `json:"content,omitempty"`
+		} `json:"message,omitempty"`
 	} `json:"choices"`
 }
 
@@ -122,21 +123,46 @@ func parseBoolWithDefault(value string, defaultValue bool) bool {
 }
 
 func callOpenAI(apiKey, instruction, input string, temperature float64, model string) (string, error) {
-	url := "https://api.openai.com/v1/chat/completions"
+	var url string
+	var jsonData []byte
+	var err error
 
-	// Prepare JSON data
-	messages := []map[string]string{
-		{"role": "system", "content": instruction},
-		{"role": "user", "content": input},
+	switch model {
+	case "gpt-4", "gpt-4-0314", "gpt-4-32k", "gpt-4-32k-0314", "gpt-3.5-turbo", "gpt-3.5-turbo-0301":
+		url = "https://api.openai.com/v1/chat/completions"
+
+		// Prepare JSON data for GPT-4 models
+		messages := []map[string]string{
+			{"role": "system", "content": instruction},
+			{"role": "user", "content": input},
+		}
+
+		jsonData, err = json.Marshal(map[string]interface{}{
+			"model":       model,
+			"messages":    messages,
+			"temperature": temperature,
+			"max_tokens":  100,
+			"stop":        []string{"\n"},
+		})
+
+	case "text-davinci-003", "text-davinci-002", "text-curie-001", "text-babbage-001", "text-ada-001":
+		url = "https://api.openai.com/v1/completions"
+
+		// Prepare JSON data for GPT-3 models
+		prompt := instruction + " " + input
+		jsonData, err = json.Marshal(map[string]interface{}{
+			"model":       model,
+			"prompt":      prompt,
+			"temperature": temperature,
+			"max_tokens":  100,
+			"stop":        []string{"\n"},
+		})
+
+	case "whisper-1":
+		url = "https://api.openai.com/v1/audio/transcriptions"
+	default:
+		return "", fmt.Errorf("unsupported model: %s", model)
 	}
-
-	jsonData, err := json.Marshal(map[string]interface{}{
-		"model":       model,
-		"messages":    messages,
-		"temperature": temperature,
-		"max_tokens":  100,
-		"stop":        []string{"\n"},
-	})
 
 	if err != nil {
 		return "", err
@@ -182,6 +208,10 @@ func callOpenAI(apiKey, instruction, input string, temperature float64, model st
 	for _, choice := range openAIResponse.Choices {
 		if choice.Message.Role == "assistant" {
 			assistantMessage = strings.TrimSpace(choice.Message.Content)
+			break
+		}
+		if choice.Text != "" {
+			assistantMessage = strings.TrimSpace(choice.Text)
 			break
 		}
 	}
