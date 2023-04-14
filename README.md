@@ -30,7 +30,7 @@ echo 'Hello GPT!' | sgpt -i 'you are a 1337 h4x0r who makes any input '1337'' -k
 ```
 
 ```sh
-cat sentiment.txt | sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k <API_KEY>
+cat sample.txt | sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k <API_KEY>
 ```
 
 ```sh
