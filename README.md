@@ -6,6 +6,7 @@ StreamGPT (sgpt) is a command-line tool to interact with OpenAI's API. It reads 
 - Interact with OpenAI's GPT-4 model
 - Customizable model prompt and temperature
 - Debug mode for detailed API response information
+- Support for environment variables and command line flags
 
 ## Installation
 
@@ -25,15 +26,15 @@ sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-
 Here is a basic examples of how to use SGPT:
 
 ```sh
-echo 'Hello GPT!' | ./sgpt -i 'you are a 1337 h4x0r who makes any input '1337' -k <API_KEY>
+echo 'Hello GPT!' | sgpt -i 'you are a 1337 h4x0r who makes any input '1337'' -k <API_KEY>
 ```
 
 ```sh
-cat sentiment.txt | ./sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k <API_KEY>
+cat sentiment.txt | sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k <API_KEY>
 ```
 
 ```sh
-echo "If the coefficients of a quadratic equation are 1, 3, and -4, what are the roots of the equation?" | sgpt -i "Answer the following question:" -k <API_KEY>
+echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the roots of the equation?' | sgpt -i 'Answer the following question:' -k <API_KEY>
 ```
 
 ## Command-line flags
@@ -43,6 +44,17 @@ echo "If the coefficients of a quadratic equation are 1, 3, and -4, what are the
 - `-m`: The GPT model to use (default: "`gpt-4`")
 - `-s`: Separator character for input (default: `\n`)
 - `-d`: Enable debug output (default: false)
+
+## Command-line flags and environment variables
+
+- `-k` (required): Your OpenAI API key. Can also be set with the `SGPT_API_KEY` environment variable.
+- `-i` (required): The instruction for the GPT model. Can also be set with the `SGPT_INSTRUCTION` environment variable.
+- `-t:`  The temperature for the GPT model (default: 0.5). Can also be set with the `SGPT_TEMPERATURE` environment variable.
+- `-m:`  The GPT model to use (default: "`gpt-4`"). Can also be set with the `SGPT_MODEL` environment variable.
+- `-s:`  Separator character for input (default: `\n`). Can also be set with the `SGPT_SEPARATOR` environment variable.
+- `-d:`  Enable debug output (default: `false`). Can also be set with the `SGPT_DEBUG` environment variable.
+
+- Note: Command line flags take precedence over environment variables.
 
 ## License
 
