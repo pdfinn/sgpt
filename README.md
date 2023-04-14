@@ -3,10 +3,24 @@ StreamGPT (sgpt) is a command-line tool to interact with OpenAI's API. It reads 
 
 ## Features
 
-- Interact with OpenAI's GPT-4 model
+- Interact with OpenAI's GPT-4 and GPT-3 models
 - Customizable model prompt and temperature
 - Debug mode for detailed API response information
-- Support for environment variables and command line flags
+- Support for environmental variables
+- Supported models:
+    - GPT-4:
+        - `gpt-4`
+        - `gpt-4-0314`
+        - `gpt-4-32k`
+        - `gpt-4-32k-0314`
+    - GPT-3:
+        - `gpt-3.5-turbo`
+        - `gpt-3.5-turbo-0301`
+        - `text-davinci-003`
+        - `text-davinci-002`
+        - `text-curie-001`
+        - `text-babbage-001`
+        - `text-ada-001`
 
 ## Installation
 
@@ -16,6 +30,10 @@ To install and use SGPT, follow these steps:
 2. Clone this repository to your local machine using `https://github.com/pdfinn/sgpt`.
 3. Change to the `sgpt` directory and build the binary by running `go build`.
 4. Make sure your OpenAI API key is available.
+
+## Supported models
+
+For more information on OpenAI models see `https://platform.openai.com/docs/models/gpt-4`
 
 ## Usage
 
