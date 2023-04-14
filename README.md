@@ -31,11 +31,9 @@ To install and use SGPT, follow these steps:
 3. Change to the `sgpt` directory and build the binary by running `go build`.
 4. Make sure your OpenAI API key is available.
 
-## Supported models
+## Usage
 
 For more information on OpenAI models see `https://platform.openai.com/docs/models/gpt-4`
-
-## Usage
 
 ```sh
 sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-d]
@@ -54,14 +52,6 @@ cat sample.txt | sgpt -i 'You are an expert at analysing the sentiment of Englis
 ```sh
 echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the roots of the equation?' | sgpt -i 'Answer the following question:' -k <API_KEY>
 ```
-
-## Command-line flags
-- `-k` (required): Your OpenAI API key
-- `-i` (required): The instruction for the GPT model
-- `-t`: The temperature for the GPT model (default: 0.5)
-- `-m`: The GPT model to use (default: "`gpt-4`")
-- `-s`: Separator character for input (default: `\n`)
-- `-d`: Enable debug output (default: false)
 
 ## Command-line flags and environment variables
 
