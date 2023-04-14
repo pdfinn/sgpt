@@ -13,6 +13,10 @@ import (
 	"strings"
 )
 
+//TODO add support for config file
+//TODO add support for Whisper
+//TODO and general file system operations
+
 type OpenAIResponse struct {
 	Choices []struct {
 		Message struct {
@@ -25,17 +29,37 @@ type OpenAIResponse struct {
 var debug *bool
 
 func init() {
-	debug = flag.Bool("d", false, "Enable debug output")
+	envDebug := os.Getenv("SGPT_DEBUG")
+	debug = flag.Bool("d", parseBoolWithDefault(envDebug, false), "Enable debug output")
 }
 
 func main() {
+	// Default values
+	defaultTemperature := 0.5
+	defaultModel := "gpt-4"
+
+	// Check environment variables
+	envApiKey := os.Getenv("SGPT_API_KEY")
+	envInstruction := os.Getenv("SGPT_INSTRUCTION")
+	envTemperature, err := strconv.ParseFloat(os.Getenv("SGPT_TEMPERATURE"), 64)
+	if err != nil {
+		envTemperature = defaultTemperature
+	}
+	envModel := os.Getenv("SGPT_MODEL")
+	envSeparator := os.Getenv("SGPT_SEPARATOR")
+
 	// Command line arguments
-	apiKey := flag.String("k", "", "OpenAI API key")
-	instruction := flag.String("i", "", "Instruction for the GPT model")
-	temperature := flag.Float64("t", 0.5, "Temperature for the GPT model")
-	model := flag.String("m", "gpt-4", "GPT model to use")
-	separator := flag.String("s", "\n", "Separator character for input")
+	apiKey := flag.String("k", envApiKey, "OpenAI API key")
+	instruction := flag.String("i", envInstruction, "Instruction for the GPT model")
+	temperature := flag.Float64("t", envTemperature, "Temperature for the GPT model")
+	model := flag.String("m", envModel, "GPT model to use")
+	separator := flag.String("s", envSeparator, "Separator character for input")
 	flag.Parse()
+
+	// Use default values if neither flags nor environment variables are set
+	if *model == "" {
+		*model = defaultModel
+	}
 
 	if *apiKey == "" {
 		log.Fatal("API key is required")
@@ -71,6 +95,30 @@ func debugOutput(debug bool, format string, a ...interface{}) {
 	if debug {
 		log.Printf(format, a...)
 	}
+}
+
+func parseFloatWithDefault(value string, defaultValue float64) float64 {
+	if value == "" {
+		return defaultValue
+	}
+	parsedValue, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		log.Printf("Warning: Failed to parse float value: %v", err)
+		return defaultValue
+	}
+	return parsedValue
+}
+
+func parseBoolWithDefault(value string, defaultValue bool) bool {
+	if value == "" {
+		return defaultValue
+	}
+	parsedValue, err := strconv.ParseBool(value)
+	if err != nil {
+		log.Printf("Warning: Failed to parse bool value: %v", err)
+		return defaultValue
+	}
+	return parsedValue
 }
 
 func callOpenAI(apiKey, instruction, input string, temperature float64, model string) (string, error) {
