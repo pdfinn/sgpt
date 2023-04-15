@@ -24,7 +24,9 @@ StreamGPT (sgpt) is a command-line interface (CLI) tool to interact with OpenAI'
 
 ## Installation
 
-To install and use SGPT, follow these steps:
+To install SGPT download the version from the `build` directory in a location such as `$HOME/bin/`
+
+To build SGPT from source, follow these steps:
 
 1. Ensure you have the Go programming language installed on your system. If not, follow the instructions at https://golang.org/doc/install.
 2. Clone this repository to your local machine using `https://github.com/pdfinn/sgpt`.
