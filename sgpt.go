@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"encoding/json"
-	"flag"
 	"fmt"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,7 +15,6 @@ import (
 	"strings"
 )
 
-//TODO add support for config file
 //TODO add support for Whisper
 //TODO and general file system operations
 
@@ -31,13 +32,14 @@ var debug *bool
 
 func init() {
 	envDebug := os.Getenv("SGPT_DEBUG")
-	debug = flag.Bool("d", parseBoolWithDefault(envDebug, false), "Enable debug output")
+	debug = pflag.Bool("d", parseBoolWithDefault(envDebug, false), "Enable debug output")
 }
 
 func main() {
 	// Default values
 	defaultTemperature := 0.5
 	defaultModel := "gpt-4"
+	//defaulSeparator := "\n"
 
 	// Check environment variables
 	envApiKey := os.Getenv("SGPT_API_KEY")
@@ -48,14 +50,46 @@ func main() {
 	}
 	envModel := os.Getenv("SGPT_MODEL")
 	envSeparator := os.Getenv("SGPT_SEPARATOR")
+	envDebug := parseBoolWithDefault(os.Getenv("SGPT_DEBUG"), false)
 
 	// Command line arguments
-	apiKey := flag.String("k", envApiKey, "OpenAI API key")
-	instruction := flag.String("i", envInstruction, "Instruction for the GPT model")
-	temperature := flag.Float64("t", envTemperature, "Temperature for the GPT model")
-	model := flag.String("m", envModel, "GPT model to use")
-	separator := flag.String("s", envSeparator, "Separator character for input")
-	flag.Parse()
+	apiKey := pflag.StringP("key", "k", envApiKey, "OpenAI API key")
+	instruction := pflag.StringP("instruction", "i", envInstruction, "Instruction for the GPT model")
+	temperature := pflag.Float64P("temperature", "t", envTemperature, "Temperature for the GPT model")
+	model := pflag.StringP("model", "m", envModel, "GPT model to use")
+	defaulSeparator := "\n"
+	separator := pflag.StringP("separator", "s", envSeparator, "Separator character for input")
+	if *separator == "" {
+		*separator = defaulSeparator
+	}
+	debug = pflag.BoolP("debug", "d", envDebug, "Enable debug output")
+	pflag.Parse()
+	debugOutput(*debug, "Parsed flags: apiKey=%s, instruction=%s, temperature=%f, model=%s, separator=%s", *apiKey, *instruction, *temperature, *model, *separator)
+
+	// Read the configuration file
+	viper.SetConfigName("sgpt")
+	viper.AddConfigPath(".")
+	viper.AddConfigPath("$HOME/.sgpt")
+	viper.SetConfigType("yaml")
+
+	err = viper.ReadInConfig()
+	if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+		log.Printf("Warning: Config file not found: %v", err)
+	} else if err != nil {
+		log.Printf("Warning: Error reading config file: %v", err)
+	}
+	debugOutput(*debug, "Config values: apiKey=%s, instruction=%s, temperature=%f, model=%s, separator=%s", viper.GetString("api_key"), viper.GetString("instruction"), viper.GetFloat64("temperature"), viper.GetString("model"), viper.GetString("separator"))
+
+	// Set default values and bind configuration values to flags
+	viper.SetDefault("model", defaultModel)
+	viper.SetDefault("temperature", defaultTemperature)
+	viper.BindPFlag("api_key", pflag.Lookup("k"))
+	viper.BindPFlag("instruction", pflag.Lookup("i"))
+	viper.BindPFlag("model", pflag.Lookup("m"))
+	viper.BindPFlag("temperature", pflag.Lookup("t"))
+	viper.BindPFlag("separator", pflag.Lookup("s"))
+	viper.BindPFlag("debug", pflag.Lookup("d"))
+	debugOutput(*debug, "Final values: apiKey=%s, instruction=%s, temperature=%f, model=%s, separator=%s", *apiKey, *instruction, *temperature, *model, *separator)
 
 	// Use default values if neither flags nor environment variables are set
 	if *model == "" {
@@ -72,12 +106,24 @@ func main() {
 
 	for {
 		inputChar, _, err := reader.ReadRune()
-		if err != nil {
+		if err == io.EOF {
+			input := inputBuffer.String()
+			if input != "" {
+				response, err := callOpenAI(*apiKey, *instruction, input, *temperature, *model)
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Println(response)
+			}
 			break
+		}
+		if err != nil {
+			log.Fatal(err)
 		}
 
 		if string(inputChar) == *separator {
 			input := inputBuffer.String()
+			debugOutput(*debug, "Read character: %c", input)
 			inputBuffer.Reset()
 
 			response, err := callOpenAI(*apiKey, *instruction, input, *temperature, *model)
@@ -123,6 +169,7 @@ func parseBoolWithDefault(value string, defaultValue bool) bool {
 }
 
 func callOpenAI(apiKey, instruction, input string, temperature float64, model string) (string, error) {
+	debugOutput(*debug, "Received input: %s", input)
 	var url string
 	var jsonData []byte
 	var err error
