@@ -57,7 +57,7 @@ echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the
 
 | Flags        | Environment Variable	         | Config Key      | 	Description	                  | Default |
 |--------------------|-------------------|-----------------|--------------------------------|---------|
-| -k, --key	         | SGPT_API_KEY      | 	api_key	OpenAI | API key                        | (none)  |
+| -k, --key	         | SGPT_API_KEY      | 	api_key	 | OpenAI API key                        | (none)  |
 | -i, --instruction	 | SGPT_INSTRUCTION	 | instruction	    | Instruction for the GPT model  | 	(none) |
 | -t, --temperature	 | SGPT_TEMPERATURE	 | temperature     | 	Temperature for the GPT model | 	0.5    |
 | -m, --model	       | SGPT_MODEL	       | model           | GPT model to use	              | gpt-4   |
