@@ -1,12 +1,12 @@
 # StreamGPT
-StreamGPT (sgpt) is a command-line tool to interact with OpenAI's API. It reads user input from standard input and sends it to the GPT model to generate a response based on the given instruction.  It writes these responses to standard output.  `sgpt` is intended for integration with toolchains.  It can operate on an input stream.
+StreamGPT (sgpt) is a command-line interface (CLI) tool to interact with OpenAI's API. It reads user input from standard input and sends it to the GPT model to generate a response based on the given instruction.  It writes these responses to standard output.  `sgpt` is intended for integration with toolchains.  It can operate on an input stream.
 
 ## Features
 
-- Interact with OpenAI's GPT-4 and GPT-3 models
-- Customizable model prompt and temperature
-- Debug mode for detailed API response information
-- Support for environmental variables
+- Read input from stdin, process it using the GPT model, and output the response
+- Configure the tool using command-line flags, environment variables, and a configuration file
+- Support for different GPT models
+- Adjustable temperature for controlling randomness in the output
 - Supported models:
     - GPT-4:
         - `gpt-4`
@@ -55,14 +55,39 @@ echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the
 
 ## Command-line flags and environment variables
 
-- `-k` (required): Your OpenAI API key. Can also be set with the `SGPT_API_KEY` environment variable.
-- `-i` (required): The instruction for the GPT model. Can also be set with the `SGPT_INSTRUCTION` environment variable.
-- `-t:`  The temperature for the GPT model (default: 0.5). Can also be set with the `SGPT_TEMPERATURE` environment variable.
-- `-m:`  The GPT model to use (default: "`gpt-4`"). Can also be set with the `SGPT_MODEL` environment variable.
-- `-s:`  Separator character for input (default: `\n`). Can also be set with the `SGPT_SEPARATOR` environment variable.
-- `-d:`  Enable debug output (default: `false`). Can also be set with the `SGPT_DEBUG` environment variable.
+| Environment        | Variable	         | Config Key        | 	Description	                  | Default |
+|--------------------|-------------------|-------------------|--------------------------------|---------|
+| -k, --key	         | SGPT_API_KEY      | 	api_key	OpenAI   | API key                        | (none)  |
+| -i, --instruction	 | SGPT_INSTRUCTION	 | instruction	      | Instruction for the GPT model  | 	(none) |
+| -t, --temperature	 | SGPT_TEMPERATURE	 | temperature       | 	Temperature for the GPT model | 	0.5    |
+| -m, --model	       | SGPT_MODEL	model  | GPT model to use	 | gpt-4                          |
+| -s, --separator    | 	SGPT_SEPARATOR   | 	separator        | 	Separator character for input | 	\n     |
+| -d, --debug        | SGPT_DEBUG        | 	debug            | 	Enable debug output	          | false   |
 
 - Note: Command line flags take precedence over environment variables.
+
+## Configuration File
+SGPT can be configured using a YAML configuration file. By default, SGPT looks for a file named `sgpt.yaml` in the current directory or `$HOME/.sgpt`.
+
+Example configuration file:
+
+```
+api_key: your_api_key_here
+instruction: "Translate the following English text to French:"
+model: gpt-4
+temperature: 0.5
+separator: "\n"
+debug: false
+```
+
+## Order of Preference
+The order of preference for configuration values is as follows:
+
+1. Command-line flags
+2. Environment variables
+3. Configuration file
+
+When a value is set using multiple methods, the method with the highest precedence will be used. For example, if a value is set using both a command-line flag and an environment variable, the value from the command-line flag will be used.
 
 ## License
 
