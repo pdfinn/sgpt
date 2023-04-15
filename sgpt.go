@@ -15,9 +15,6 @@ import (
 	"strings"
 )
 
-//TODO add support for Whisper
-//TODO and general file system operations
-
 type OpenAIResponse struct {
 	Choices []struct {
 		Text    string `json:"text,omitempty"`
@@ -63,7 +60,6 @@ func main() {
 	}
 	debug = pflag.BoolP("debug", "d", envDebug, "Enable debug output")
 	pflag.Parse()
-	debugOutput(*debug, "Parsed flags: apiKey=%s, instruction=%s, temperature=%f, model=%s, separator=%s", *apiKey, *instruction, *temperature, *model, *separator)
 
 	// Read the configuration file
 	viper.SetConfigName("sgpt")
@@ -77,7 +73,6 @@ func main() {
 	} else if err != nil {
 		log.Printf("Warning: Error reading config file: %v", err)
 	}
-	debugOutput(*debug, "Config values: apiKey=%s, instruction=%s, temperature=%f, model=%s, separator=%s", viper.GetString("api_key"), viper.GetString("instruction"), viper.GetFloat64("temperature"), viper.GetString("model"), viper.GetString("separator"))
 
 	// Set default values and bind configuration values to flags
 	viper.SetDefault("model", defaultModel)
@@ -88,7 +83,6 @@ func main() {
 	viper.BindPFlag("temperature", pflag.Lookup("t"))
 	viper.BindPFlag("separator", pflag.Lookup("s"))
 	viper.BindPFlag("debug", pflag.Lookup("d"))
-	debugOutput(*debug, "Final values: apiKey=%s, instruction=%s, temperature=%f, model=%s, separator=%s", *apiKey, *instruction, *temperature, *model, *separator)
 
 	// Use default values if neither flags nor environment variables are set
 	if *model == "" {
@@ -122,7 +116,6 @@ func main() {
 
 		if string(inputChar) == *separator {
 			input := inputBuffer.String()
-			debugOutput(*debug, "Read character: %c", input)
 			inputBuffer.Reset()
 
 			response, err := callOpenAI(*apiKey, *instruction, input, *temperature, *model)
@@ -168,7 +161,6 @@ func parseBoolWithDefault(value string, defaultValue bool) bool {
 }
 
 func callOpenAI(apiKey, instruction, input string, temperature float64, model string) (string, error) {
-	debugOutput(*debug, "Received input: %s", input)
 	var url string
 	var jsonData []byte
 	var err error
