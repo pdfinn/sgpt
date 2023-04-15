@@ -67,7 +67,7 @@ echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the
 - Note: Command line flags take precedence over environment variables.
 
 ## Configuration File
-SGPT can be configured using a YAML configuration file. By default, SGPT looks for a file named `sgpt.yaml` in the current directory or `$HOME/.sgpt`.
+SGPT can be configured using a YAML configuration file. By default, SGPT looks for a file named `sgpt.yaml` in the current directory or `$HOME/.sgpt`.  This is especially useful for storing values that are not frequently changed, like the API key
 
 Example configuration file:
 
