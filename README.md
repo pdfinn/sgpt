@@ -55,7 +55,7 @@ echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the
 
 ## Command-line flags and environment variables
 
-| Environment        | Variable	         | Config Key      | 	Description	                  | Default |
+| Flags        | Environment Variable	         | Config Key      | 	Description	                  | Default |
 |--------------------|-------------------|-----------------|--------------------------------|---------|
 | -k, --key	         | SGPT_API_KEY      | 	api_key	OpenAI | API key                        | (none)  |
 | -i, --instruction	 | SGPT_INSTRUCTION	 | instruction	    | Instruction for the GPT model  | 	(none) |
