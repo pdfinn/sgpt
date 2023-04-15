@@ -1,0 +1,6 @@
+#apiKey: your_api_key_here
+#instruction: "Your instruction here"
+#temperature: 0.5
+#model: gpt-4
+#separator: "\n"
+#debug: false
