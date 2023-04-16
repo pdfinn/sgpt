@@ -49,7 +49,7 @@ func main() {
 	envDebug := parseBoolWithDefault(os.Getenv("SGPT_DEBUG"), false)
 
 	// Command line arguments
-	apiKey := pflag.StringP("key", "k", envApiKey, "OpenAI API key")
+	apiKey := pflag.StringP("api_key", "k", envApiKey, "OpenAI API key")
 	instruction := pflag.StringP("instruction", "i", envInstruction, "Instruction for the GPT model")
 	temperature := pflag.Float64P("temperature", "t", envTemperature, "Temperature for the GPT model")
 	model := pflag.StringP("model", "m", envModel, "GPT model to use")
