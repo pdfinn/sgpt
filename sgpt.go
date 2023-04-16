@@ -166,7 +166,7 @@ func callOpenAI(apiKey, instruction, input string, temperature float64, model st
 	var err error
 
 	switch model {
-	case "gpt-4", "gpt-4-0314", "gpt-4-32k", "gpt-4-32k-0314", "gpt-3.5-turbo", "gpt-3.5-turbo-0301":
+	case "gpt-4", "gpt-4-0314", "gpt-4-32k", "gpt-4-32k-0314", "gpt-3.5-turbo":
 		url = "https://api.openai.com/v1/chat/completions"
 
 		// Prepare JSON data for GPT-4 models
