@@ -57,14 +57,14 @@ echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the
 
 ## Command-line flags and environment variables
 
-| Flags              | Environment Variable	         | Config Key      | 	Description	                  | Default |
-|--------------------|-------------------|-----------------|--------------------------------|---------|
-| -k, --api_key	     | SGPT_API_KEY      | 	api_key	 | OpenAI API key                        | (none)  |
-| -i, --instruction	 | SGPT_INSTRUCTION	 | instruction	    | Instruction for the GPT model  | 	(none) |
-| -t, --temperature	 | SGPT_TEMPERATURE	 | temperature     | 	Temperature for the GPT model | 	0.5    |
-| -m, --model	       | SGPT_MODEL	       | model           | GPT model to use	              | gpt-4   |
-| -s, --separator    | 	SGPT_SEPARATOR   | 	separator      | 	Separator character for input | 	\n     |
-| -d, --debug        | SGPT_DEBUG        | 	debug          | 	Enable debug output	          | false   |
+| Flags              | Environment Variable	         | Config Key      | 	Description	                  | Default       |
+|--------------------|-------------------|-----------------|--------------------------------|---------------|
+| -k, --api_key	     | SGPT_API_KEY      | 	api_key	 | OpenAI API key                        | (none)        |
+| -i, --instruction	 | SGPT_INSTRUCTION	 | instruction	    | Instruction for the GPT model  | 	(none)       |
+| -t, --temperature	 | SGPT_TEMPERATURE	 | temperature     | 	Temperature for the GPT model | 	0.5          |
+| -m, --model	       | SGPT_MODEL	       | model           | GPT model to use	              | gpt-3.5-turbo |
+| -s, --separator    | 	SGPT_SEPARATOR   | 	separator      | 	Separator character for input | 	\n           |
+| -d, --debug        | SGPT_DEBUG        | 	debug          | 	Enable debug output	          | false         |
 
 - Note: Command line flags take precedence over environment variables.
 
