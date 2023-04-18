@@ -35,7 +35,7 @@ func init() {
 func main() {
 	// Default values
 	defaultTemperature := 0.5
-	defaultModel := "gpt-4"
+	defaultModel := "gpt-3.5-turbo"
 
 	// Check environment variables
 	envApiKey := os.Getenv("SGPT_API_KEY")
