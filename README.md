@@ -18,7 +18,7 @@ StreamGPT is intended to merge Unix design philosophy principles with the power 
    Instruction: "Summarize the following text:"
 
     ```sh
-   cat sample.txt | ./main --api_key YOUR_API_KEY --instruction "Summarize the following text:" --model "gpt-3.5-turbo"
+   cat sample.txt | sgpt --api_key YOUR_API_KEY --instruction "Summarize the following text:" --model "gpt-3.5-turbo"
    ```
 
 2) Text translation:
@@ -43,7 +43,7 @@ Instruction: "Write a Python function to calculate the factorial of a given numb
 Example usage:
 
     ```sh
-   echo "factorial" | ./main --api_key YOUR_API_KEY --instruction "Write a Python function to calculate the factorial of a given number:" --model "gpt-3.5-turbo"
+   echo "factorial" | sgpt --api_key YOUR_API_KEY --instruction "Write a Python function to calculate the factorial of a given number:" --model "gpt-3.5-turbo"
     ```
 
 ## Features
