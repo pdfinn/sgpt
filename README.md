@@ -1,6 +1,51 @@
 # StreamGPT
 StreamGPT (sgpt) is a command-line interface (CLI) tool to interact with OpenAI's API. It reads user input from standard input and sends it to the GPT model to generate a response based on the given instruction.  It writes these responses to standard output.  `sgpt` is intended for integration with toolchains.  It can operate on an input stream.
 
+## Usage
+
+```sh
+sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-d]
+```
+For more information on OpenAI models see `https://platform.openai.com/docs/models/gpt-4`
+
+
+## Use cases
+
+StreamGPT is intended to merge Unix design philosophy principles with the power of AI.  It may be thought of as a general-purpose AI component that can be arbitrarily plugged into any text processing operation.  SGPT helps make this convenient by allowyng API keys and other settings to be stored in a configuration file.
+
+1) Text summarization:
+
+   Instruction: "Summarize the following text:"
+
+    ```sh
+   cat sample.txt | ./main --api_key YOUR_API_KEY --instruction "Summarize the following text:" --model "gpt-3.5-turbo"
+   ```
+
+2) Text translation:
+
+   Instruction: "Translate the following English text to 1337:"
+   Example usage:
+
+    ```sh
+   echo "Free Kevin!" | sgpt -i "you are a 1337 h4x0r who translates any input '1337'" -k <API_KEY>
+   ```
+
+3) Sentiment analysis:
+   Instruction: "You are an expert at analysing the sentiment of English statements. Analyze the sentiment of each sample and express it as an emoji."
+   Example usage:
+
+    ```sh
+   cat sample.txt | sgpt -i "You are an expert at analysing the sentiment of English statements. Analyze the sentiment of each sample and express it as an emoji." -k <API_KEY>
+   ```
+
+4) Code generation:
+Instruction: "Write a Python function to calculate the factorial of a given number:"
+Example usage:
+
+    ```sh
+   echo "factorial" | ./main --api_key YOUR_API_KEY --instruction "Write a Python function to calculate the factorial of a given number:" --model "gpt-3.5-turbo"
+    ```
+
 ## Features
 
 - Read input from stdin, process it using the GPT model, and output the response
@@ -33,27 +78,6 @@ To build SGPT from source, follow these steps:
 3. Change to the `sgpt` directory and build the binary by running `go build`.
 4. Make sure your OpenAI API key is available.
 
-## Usage
-
-For more information on OpenAI models see `https://platform.openai.com/docs/models/gpt-4`
-
-```sh
-sgpt -k <API_KEY> -i <INSTRUCTION> [-t TEMPERATURE] [-m MODEL] [-s SEPARATOR] [-d]
-```
-
-Here is a basic examples of how to use SGPT:
-
-```sh
-echo 'Hello GPT!' | sgpt -i 'you are a 1337 h4x0r who makes any input '1337'' -k <API_KEY>
-```
-
-```sh
-cat sample.txt | sgpt -i 'You are an expert at analysing the sentiment of English statements. Analyze the sentiment and express it as an emoji.' -k <API_KEY>
-```
-
-```sh
-echo 'If the coefficients of a quadratic equation are 1, 3, and -4, what are the roots of the equation?' | sgpt -i 'Answer the following question:' -k <API_KEY>
-```
 
 ## Command-line flags and environment variables
 
