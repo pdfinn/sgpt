@@ -27,7 +27,7 @@ StreamGPT is intended to merge Unix design philosophy principles with the power 
    Example usage:
 
     ```sh
-   echo "Free Kevin!" | sgpt -i "you are a 1337 h4x0r who translates any input '1337'" -k <API_KEY>
+   echo "Free Kevin!" | sgpt -i "you are a 1337 h4x0r who translates any input to '1337'" -k <API_KEY>
    ```
 
 3) Sentiment analysis:
