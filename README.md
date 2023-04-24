@@ -1,5 +1,5 @@
 # StreamGPT
-StreamGPT (SGPT) is a command-line interface (CLI) tool to interact with OpenAI's API. It reads user input from standard input and sends it to the GPT model to generate a response based on the given instruction.  It writes these responses to standard output.  `sgpt` is intended for integration with toolchains.  It can operate on an input stream.
+StreamGPT (SGPT) is a command-line interface (CLI) tool to interact with OpenAI's API. It reads user input from standard input and sends it to the GPT model to generate a response based on the given instructions; it writes these responses to standard output.  `sgpt` is intended for integration with toolchains; and can operate on an input stream.
 
 ## Usage
 
