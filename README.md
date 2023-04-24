@@ -11,7 +11,7 @@ For more information on OpenAI models see `https://platform.openai.com/docs/mode
 
 ## Use cases
 
-StreamGPT is intended to merge [Unix design philosophy](https://en.wikipedia.org/wiki/Unix_philosophy) principles with the power of generative AI.  It may be thought of as a general-purpose generative AI component that can be arbitrarily plugged into any text processing operation.  SGPT helps make this convenient by allowyng API keys and other settings to be stored in a configuration file.  A seperator character (the default is a new-line) may be specified to trigger application of the AI's instruction.
+StreamGPT is intended to merge [Unix design philosophy](https://en.wikipedia.org/wiki/Unix_philosophy) principles with the power of generative AI.  It may be thought of as a general-purpose generative AI component that can be arbitrarily plugged into any text processing pipeline.  SGPT helps make this convenient by allowyng API keys and other settings to be stored in a configuration file.  A seperator character (the default is a new-line) may be specified to trigger application of the AI's instruction.
 
 1) Text summarization:
 
