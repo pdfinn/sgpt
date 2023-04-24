@@ -35,7 +35,7 @@ StreamGPT is intended to merge [Unix design philosophy](https://en.wikipedia.org
    Example usage:
 
     ```sh
-   cat sample.txt | sgpt -i "You are an expert at analysing the sentiment of English statements. Analyze the sentiment of each sample and express it as an emoji." -k <API_KEY>
+   cat samples.txt | sgpt -i "You are an expert at analysing the sentiment of English statements. Analyze the sentiment of each sample and express it as an emoji." -k <API_KEY>
    ```
 
 4) Code generation:
