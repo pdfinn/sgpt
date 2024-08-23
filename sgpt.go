@@ -33,56 +33,54 @@ func init() {
 }
 
 func main() {
-	// Default values
-	defaultTemperature := 0.5
+	// Set default values for fallback
 	defaultModel := "gpt-3.5-turbo"
+	defaultTemperature := 0.5
 
-	// Check environment variables
-	envApiKey := os.Getenv("SGPT_API_KEY")
-	envInstruction := os.Getenv("SGPT_INSTRUCTION")
-	envTemperature, err := strconv.ParseFloat(os.Getenv("SGPT_TEMPERATURE"), 64)
-	if err != nil {
-		envTemperature = defaultTemperature
-	}
-	envModel := os.Getenv("SGPT_MODEL")
-	envSeparator := os.Getenv("SGPT_SEPARATOR")
-	envDebug := parseBoolWithDefault(os.Getenv("SGPT_DEBUG"), false)
+	// Initialize flags with environment variables as defaults
+	apiKey := pflag.StringP("api_key", "k", os.Getenv("SGPT_API_KEY"), "OpenAI API key")
+	instruction := pflag.StringP("instruction", "i", os.Getenv("SGPT_INSTRUCTION"), "Instruction for the GPT model")
+	temperature := pflag.Float64P("temperature", "t", parseFloatWithDefault(os.Getenv("SGPT_TEMPERATURE"), defaultTemperature), "Temperature for the GPT model")
+	model := pflag.StringP("model", "m", os.Getenv("SGPT_MODEL"), "GPT model to use")
+	separator := pflag.StringP("separator", "s", os.Getenv("SGPT_SEPARATOR"), "Separator character for input")
+	//debug := pflag.BoolP("debug", "d", parseBoolWithDefault(os.Getenv("SGPT_DEBUG"), false), "Enable debug output")
 
-	// Command line arguments
-	apiKey := pflag.StringP("api_key", "k", envApiKey, "OpenAI API key")
-	instruction := pflag.StringP("instruction", "i", envInstruction, "Instruction for the GPT model")
-	temperature := pflag.Float64P("temperature", "t", envTemperature, "Temperature for the GPT model")
-	model := pflag.StringP("model", "m", envModel, "GPT model to use")
-	defaulSeparator := "\n"
-	separator := pflag.StringP("separator", "s", envSeparator, "Separator character for input")
+	// Set default values if not provided by any source
 	if *separator == "" {
-		*separator = defaulSeparator
+		*separator = "\n"
 	}
-	debug = pflag.BoolP("debug", "d", envDebug, "Enable debug output")
+
 	pflag.Parse()
 
 	// Read the configuration file
-	viper.SetConfigName("sgpt")
+	viper.SetConfigName(".sgpt")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("$HOME/.sgpt")
 	viper.SetConfigType("yaml")
-
-	err = viper.ReadInConfig()
-	if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-		log.Printf("Warning: Config file not found: %v", err)
-	} else if err != nil {
-		log.Printf("Warning: Error reading config file: %v", err)
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			log.Printf("Warning: Config file not found: %v", err)
+		} else {
+			log.Printf("Warning: Error reading config file: %v", err)
+		}
 	}
 
-	// Set default values and bind configuration values to flags
-	viper.SetDefault("model", defaultModel)
-	viper.SetDefault("temperature", defaultTemperature)
-	viper.BindPFlag("api_key", pflag.Lookup("k"))
+	// Bind command line flags to configuration
+	viper.BindPFlag("apiKey", pflag.Lookup("api_key"))
 	viper.BindPFlag("instruction", pflag.Lookup("i"))
 	viper.BindPFlag("model", pflag.Lookup("m"))
 	viper.BindPFlag("temperature", pflag.Lookup("t"))
 	viper.BindPFlag("separator", pflag.Lookup("s"))
 	viper.BindPFlag("debug", pflag.Lookup("d"))
+
+	// Use values from viper, allowing for command line, env, or config file precedence
+	*apiKey = viper.GetString("apiKey")
+	*model = viper.GetString("model")
+	*temperature = viper.GetFloat64("temperature")
+
+	if *apiKey == "" {
+		log.Fatal("API key is required but not provided through any configuration means.")
+	}
 
 	// Use default values if neither flags nor environment variables are set
 	if *model == "" {
