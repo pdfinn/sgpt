@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -25,10 +26,10 @@ type OpenAIResponse struct {
 
 // Function to setup configuration using viper
 func setupConfig() {
-	viper.SetConfigName(".sgpt")                      // Name of the configuration file without the extension
-	viper.SetConfigType("yaml")                       // Extension of the configuration file
-	viper.AddConfigPath(".")                          // First look for config in the working directory
-	viper.AddConfigPath(os.Getenv("HOME") + "/.sgpt") // Fallback to the home directory
+	viper.SetConfigName(".sgpt")           // This sets the base name of the file
+	viper.SetConfigType("yaml")            // Explicitly set the config file type
+	viper.AddConfigPath(".")               // First look for config in the working directory
+	viper.AddConfigPath(os.Getenv("HOME")) // Correctly look in the user's home directory
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {
@@ -137,13 +138,29 @@ func callOpenAI(apiKey, model, instruction, input string, temperature float64) (
 func main() {
 	setupConfig() // Set up configuration
 
-	// Assuming apiKey, model, instruction, input, and temperature are fetched from the config or flags
+	// Check if there are command-line arguments for input
+	var input string
+	if len(os.Args) > 1 {
+		input = strings.Join(os.Args[1:], " ") // Join all arguments as input
+	} else {
+		// Fallback to reading from stdin
+		fmt.Println("No input detected via arguments. Waiting for input from stdin (press Ctrl+D when done):")
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			input += scanner.Text() + "\n"
+		}
+		if err := scanner.Err(); err != nil {
+			log.Fatalf("Error reading input from stdin: %v", err)
+		}
+	}
+
+	// Fetch other necessary configurations or flags
 	apiKey := viper.GetString("apiKey")
 	model := viper.GetString("model")
 	instruction := viper.GetString("instruction")
-	input := "Your input here" // Example input
 	temperature := viper.GetFloat64("temperature")
 
+	// Call the API function with the collected input
 	message, err := callOpenAI(apiKey, model, instruction, input, temperature)
 	if err != nil {
 		log.Fatal(err)
