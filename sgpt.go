@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"log"
@@ -24,17 +25,34 @@ type OpenAIResponse struct {
 	} `json:"choices"`
 }
 
-// Function to setup configuration using viper
+// Function to setup configuration using viper and pflag
 func setupConfig() {
-	viper.SetConfigName(".sgpt")           // This sets the base name of the file
-	viper.SetConfigType("yaml")            // Explicitly set the config file type
+	viper.SetConfigName(".sgpt")           // Name of the configuration file without the extension
+	viper.SetConfigType("yaml")            // Extension of the configuration file
 	viper.AddConfigPath(".")               // First look for config in the working directory
-	viper.AddConfigPath(os.Getenv("HOME")) // Correctly look in the user's home directory
+	viper.AddConfigPath(os.Getenv("HOME")) // Fallback to the home directory
+
+	// Setting up command line flags using Unix style single-character flags
+	pflag.StringP("apiKey", "k", "", "API key for OpenAI")
+	pflag.StringP("model", "m", "", "Model to use for OpenAI API")
+	pflag.StringP("instruction", "i", "", "Instruction for OpenAI")
+	pflag.StringP("text", "t", "", "Text to process (optional, falls back to stdin)")
+	pflag.Float64P("temperature", "T", 0.5, "Temperature setting for the model")
+
+	// Bind environment variables
+	viper.BindEnv("apiKey", "SGPT_API_KEY")
+	viper.BindEnv("model", "SGPT_MODEL")
+	viper.BindEnv("instruction", "SGPT_INSTRUCTION")
+	viper.BindEnv("temperature", "SGPT_TEMPERATURE")
+
+	// Parsing the flags
+	pflag.Parse()
+	viper.BindPFlags(pflag.CommandLine)
 
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			log.Fatalf("Config file not found: %v", err)
+			log.Printf("Config file not found: %v", err) // Non-fatal error
 		} else {
 			log.Fatalf("Error reading config file: %v", err)
 		}
@@ -138,13 +156,15 @@ func callOpenAI(apiKey, model, instruction, input string, temperature float64) (
 func main() {
 	setupConfig() // Set up configuration
 
-	// Check if there are command-line arguments for input
-	var input string
-	if len(os.Args) > 1 {
-		input = strings.Join(os.Args[1:], " ") // Join all arguments as input
-	} else {
-		// Fallback to reading from stdin
-		fmt.Println("No input detected via arguments. Waiting for input from stdin (press Ctrl+D when done):")
+	// Fetch configurations from Viper
+	apiKey := viper.GetString("apiKey")
+	model := viper.GetString("model")
+	instruction := viper.GetString("instruction")
+	temperature := viper.GetFloat64("temperature")
+	input := viper.GetString("text")
+
+	if input == "" {
+		// If no text is provided via command line, read from stdin
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			input += scanner.Text() + "\n"
@@ -154,17 +174,10 @@ func main() {
 		}
 	}
 
-	// Fetch other necessary configurations or flags
-	apiKey := viper.GetString("apiKey")
-	model := viper.GetString("model")
-	instruction := viper.GetString("instruction")
-	temperature := viper.GetFloat64("temperature")
-
-	// Call the API function with the collected input
 	message, err := callOpenAI(apiKey, model, instruction, input, temperature)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Response from OpenAI:", message)
+	fmt.Println(message) // Output only the message
 }
