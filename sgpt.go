@@ -36,8 +36,7 @@ func setupConfig() {
 	pflag.StringP("apiKey", "k", "", "API key for OpenAI")
 	pflag.StringP("model", "m", "", "Model to use for OpenAI API")
 	pflag.StringP("instruction", "i", "", "Instruction for OpenAI")
-	pflag.StringP("text", "t", "", "Text to process (optional, falls back to stdin)")
-	pflag.Float64P("temperature", "T", 0.5, "Temperature setting for the model")
+	pflag.Float64P("temperature", "t", 0.5, "Temperature setting for the model")
 
 	// Bind environment variables
 	viper.BindEnv("apiKey", "SGPT_API_KEY")
@@ -161,10 +160,13 @@ func main() {
 	model := viper.GetString("model")
 	instruction := viper.GetString("instruction")
 	temperature := viper.GetFloat64("temperature")
-	input := viper.GetString("text")
 
-	if input == "" {
-		// If no text is provided via command line, read from stdin
+	var input string
+	if pflag.NArg() > 0 {
+		// Process additional arguments as input
+		input = strings.Join(pflag.Args(), " ")
+	} else {
+		// Read from stdin if no arguments are provided
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			input += scanner.Text() + "\n"
