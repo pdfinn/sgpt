@@ -1,10 +1,5 @@
 # StreamGPT
 
-[![CI](https://github.com/pdfinn/sgpt/actions/workflows/ci.yml/badge.svg)](https://github.com/pdfinn/sgpt/actions/workflows/ci.yml)
-[![Docker](https://github.com/pdfinn/sgpt/actions/workflows/docker.yml/badge.svg)](https://github.com/pdfinn/sgpt/actions/workflows/docker.yml)
-[![Lint](https://github.com/pdfinn/sgpt/actions/workflows/lint.yml/badge.svg)](https://github.com/pdfinn/sgpt/actions/workflows/lint.yml)
-[![Release](https://github.com/pdfinn/sgpt/actions/workflows/release.yml/badge.svg)](https://github.com/pdfinn/sgpt/actions/workflows/release.yml)
-
 StreamGPT (SGPT) is a command-line interface (CLI) tool to interact with OpenAI's API, as well as Anthropic's Claude and Google's Gemini models. It reads user input from standard input and sends it to the selected AI model to generate a response based on the given instructions; it writes these responses to standard output. `sgpt` is intended for integration with toolchains and can operate on an input stream.
 
 ## Usage
