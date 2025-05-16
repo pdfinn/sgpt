@@ -1,0 +1,21 @@
+# Example configuration file for StreamGPT (sgpt)
+# Rename to sgpt.yaml and place in your home directory or the current working directory
+
+# API credentials - replace with your actual key
+api_key: "your-api-key-here"
+
+# Provider settings
+provider: "openai"  # Options: openai, anthropic, google
+model: "gpt-3.5-turbo"  # Default model for the selected provider
+
+# Request settings
+instruction: "You are a helpful assistant."  # System instruction for the model
+temperature: 0.5  # Value between 0-1, higher = more creative
+separator: "\n"  # Character to separate input chunks
+
+# Operational settings
+debug: false  # Set to true for detailed logging
+
+# Multimodal inputs (paths or URLs)
+# image: "path/to/image.jpg"
+# audio: "path/to/audio.wav" 

@@ -1,0 +1,117 @@
+# GoReleaser configuration for sgpt
+project_name: sgpt
+
+# Build settings
+builds:
+  - 
+    id: sgpt
+    main: ./cmd/sgpt
+    binary: sgpt
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+# Archive settings
+archives:
+  - 
+    id: sgpt
+    format_overrides:
+      - goos: windows
+        format: zip
+    name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - sgpt.yaml.example
+
+# Checksum settings
+checksum:
+  name_template: "{{ .ProjectName }}-{{ .Version }}-checksums.txt"
+  algorithm: sha256
+
+# Changelog settings
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - Merge pull request
+      - Merge branch
+
+# Release settings
+release:
+  github:
+    owner: pdfinn
+    name: sgpt
+  prerelease: auto
+  draft: false
+  name_template: "StreamGPT v{{ .Version }}"
+
+# Sign artifacts - only active when GPG_FINGERPRINT environment variable is set
+signs:
+  - 
+    signature: "${artifact}.sig"
+    cmd: gpg
+    args:
+      - "--batch"
+      - "--local-user"
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - "--output"
+      - "${signature}"
+      - "--detach-sig"
+      - "${artifact}"
+    artifacts: all
+    ids:
+      - sgpt
+    # Skip signing if GPG_FINGERPRINT is not set (on GitHub Actions)
+    skip_if: "{{ if not .Env.GPG_FINGERPRINT }}true{{ end }}"
+
+# Snapshot settings
+snapshot:
+  name_template: "{{ .Tag }}-next"
+
+# Docker image settings
+dockers:
+  - 
+    image_templates:
+      - "ghcr.io/pdfinn/sgpt:{{ .Version }}"
+      - "ghcr.io/pdfinn/sgpt:latest"
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+    dockerfile: Dockerfile
+    use: docker
+
+# Homebrew formula
+brews:
+  -
+    name: sgpt
+    repository:
+      owner: pdfinn
+      name: homebrew-tap
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    folder: Formula
+    homepage: "https://github.com/pdfinn/sgpt"
+    description: "StreamGPT - A Unix-style CLI tool for AI model interaction"
+    license: "MIT"
+    test: |
+      system "#{bin}/sgpt --version"
+    install: |
+      bin.install "sgpt"
+      prefix.install_metafiles 

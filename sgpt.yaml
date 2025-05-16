@@ -1,6 +1,7 @@
-#apiKey: your_api_key_here
-#instruction: "Your instruction here"
-#temperature: 0.5
-#model: gpt-4
-#separator: "\n"
-#debug: false
+api_key: your_api_key_here
+instruction: "Translate the following English text to French:"
+model: gpt-4
+temperature: 0.5
+separator: "\n"
+debug: false
+provider: openai

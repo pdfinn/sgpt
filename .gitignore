@@ -1,3 +1,34 @@
+# Build artifacts
+sgpt
+sgpt.exe
+build/
+dist/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*~
+
+# Configuration with sensitive information
+sgpt.yaml
+# Example config is allowed
+!sgpt.yaml.example
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Go specific
+*.test
+*.out
+coverage.txt
+
+# Dependency directories
+vendor/
+
+# Debug logs
+*.log
 
 .idea/aws.xml
 .idea/modules.xml
