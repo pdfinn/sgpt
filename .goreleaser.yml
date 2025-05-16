@@ -1,44 +1,42 @@
 # GoReleaser configuration for sgpt
 project_name: sgpt
+version: 2
 
 # Build settings
+before:
+  hooks:
+    - go mod tidy
+
 builds:
-  - 
-    id: sgpt
-    main: ./cmd/sgpt
-    binary: sgpt
-    env:
+  - env:
       - CGO_ENABLED=0
     goos:
       - linux
-      - darwin
       - windows
+      - darwin
     goarch:
       - amd64
       - arm64
+    main: ./cmd/sgpt/main.go
     ldflags:
-      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
-    ignore:
-      - goos: windows
-        goarch: arm64
+      - -s -w -X main.version={{.Version}}
+    binary: sgpt
 
 # Archive settings
 archives:
-  - 
-    id: sgpt
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}
     format_overrides:
       - goos: windows
         format: zip
-    name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Os }}-{{ .Arch }}"
     files:
       - LICENSE
       - README.md
-      - sgpt.yaml.example
 
 # Checksum settings
 checksum:
-  name_template: "{{ .ProjectName }}-{{ .Version }}-checksums.txt"
-  algorithm: sha256
+  name_template: '{{ .ProjectName }}-{{ .Version }}-checksums.txt'
 
 # Changelog settings
 changelog:
@@ -85,33 +83,26 @@ snapshot:
 
 # Docker image settings
 dockers:
-  - 
-    image_templates:
+  - image_templates:
       - "ghcr.io/pdfinn/sgpt:{{ .Version }}"
       - "ghcr.io/pdfinn/sgpt:latest"
+    dockerfile: Dockerfile
     build_flag_templates:
-      - "--pull"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
-    dockerfile: Dockerfile
-    use: docker
 
 # Homebrew formula
 brews:
-  -
-    name: sgpt
-    repository:
+  - tap:
       owner: pdfinn
-      name: homebrew-tap
-      token: "{{ .Env.GITHUB_TOKEN }}"
+      name: tap
     folder: Formula
-    homepage: "https://github.com/pdfinn/sgpt"
-    description: "StreamGPT - A Unix-style CLI tool for AI model interaction"
-    license: "MIT"
+    homepage: https://github.com/pdfinn/sgpt
+    description: StreamGPT (SGPT) is a CLI tool to interact with OpenAI, Anthropic, and Google AI models
+    license: MIT
     test: |
-      system "#{bin}/sgpt --version"
+      system "#{bin}/sgpt --help"
     install: |
-      bin.install "sgpt"
-      prefix.install_metafiles 
+      bin.install "sgpt" 
