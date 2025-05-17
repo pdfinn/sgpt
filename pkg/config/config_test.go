@@ -32,7 +32,7 @@ provider: openai
 
 	// Set environment variables
 	os.Setenv("SGPT_API_KEY", "env-key")
-	os.Setenv("SGPT_MODEL", "env-model")
+	os.Setenv("SGPT_MODEL", "gpt-3.5-turbo")
 	os.Setenv("SGPT_TEMPERATURE", "0.8")
 	defer func() {
 		os.Unsetenv("SGPT_API_KEY")
@@ -68,7 +68,7 @@ provider: openai
 			args: []string{},
 			expected: Config{
 				APIKey:      "env-key",
-				Model:       "env-model",
+				Model:       "gpt-3.5-turbo",
 				Provider:    "openai", // Default from code
 				Instruction: "",       // Empty because no env or flag
 				Temperature: 0.8,      // From env
