@@ -1,6 +1,7 @@
+version: 2
+
 # GoReleaser configuration for sgpt
 project_name: sgpt
-version: 2
 
 # Build settings
 before:

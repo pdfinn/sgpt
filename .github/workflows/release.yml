@@ -18,6 +18,17 @@ jobs:
         with:
           fetch-depth: 0
       
+      - name: Debug Files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Listing files in root directory:"
+          ls -la
+          echo "Checking .goreleaser.yaml file:"
+          cat .goreleaser.yaml || echo "No .goreleaser.yaml file"
+          echo "Checking .goreleaser.yml file:"
+          cat .goreleaser.yml || echo "No .goreleaser.yml file"
+      
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
@@ -39,6 +50,6 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean
+          args: release --clean --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
