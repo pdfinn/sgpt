@@ -1,6 +1,6 @@
 module sgpt
 
-go 1.20
+go 1.21
 
 require github.com/spf13/viper v1.15.0
 
