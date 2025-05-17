@@ -75,8 +75,6 @@ signs:
     artifacts: all
     ids:
       - sgpt
-    # Skip signing if GPG_FINGERPRINT is not set (on GitHub Actions)
-    skip_if: "{{ if not .Env.GPG_FINGERPRINT }}true{{ end }}"
 
 # Snapshot settings
 snapshot:
@@ -96,10 +94,10 @@ dockers:
 
 # Homebrew formula
 brews:
-  - tap:
+  - github:
       owner: pdfinn
       name: tap
-    folder: Formula
+    directory: Formula
     homepage: https://github.com/pdfinn/sgpt
     description: StreamGPT (SGPT) is a CLI tool to interact with OpenAI, Anthropic, and Google AI models
     license: MIT
